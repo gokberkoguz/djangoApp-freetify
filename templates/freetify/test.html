@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="/static/jPlayer-master/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/add-on/jplayer.playlist.min.js"></script>
+  <style>
+    div.jp-jplayer {
+      border:1px solid #009be3;
+    }
+  </style>
+<script type="text/javascript" charset="utf-8">
+var xmlhttp = new XMLHttpRequest();
+var url = "json_demo.txt";
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var myArr = JSON.parse(this.responseText);
+        document.getElementById('playList').innerHTML= JSON.stringify(myArr, undefined, 2);;
+    }
+};
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+</script>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+        <h1>Vertical Scroll Menu</h1>
+
+  <div class="vertical-menu">
+    <a href="#" class="active">Home</a>
+    {% for mp3 in mp3List %}
+    <a href="#">{{mp3.title}}</a>
+    <h3>{{mp3.1}}</h3>
+    {% endfor %}
+    </div>
+    <div class="col-sm">
+          <p>
+      <button id="play">play</button><button id="pause">pause</button>
+      <button id="stop">stop</button>
+      <button id="mute">mute</button><button id="unmute">unmute</button>
+      <span id="title"></span> |
+      <span id="currentTime"></span> / <span id="duration"></span>
+    </p>
+    <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+          $(this).jPlayer("setMedia", {
+            title: "Big Buck Bunny",
+            m4v: "http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v",
+            ogv: "http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv",
+            poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"
+          });
+        },
+        swfPath: "/js",
+        supplied: "m4v, ogv",
+        cssSelectorAncestor: "",
+        cssSelector: {
+          title: "#title",
+          play: "#play",
+          pause: "#pause",
+          stop: "#stop",
+          mute: "#mute",
+          unmute: "#unmute",
+          currentTime: "#currentTime",
+         duration: "#duration"
+        },
+        size: {
+          width: "320px",
+          height: "180px"
+        }
+      });
+    });
+</script>
+
+<style>
+.vertical-menu {
+    width: 200px;
+    height: 800px;
+    overflow-y: auto;
+}
+
+.vertical-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+</body>
+</html>

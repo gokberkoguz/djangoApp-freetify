@@ -1,0 +1,138 @@
+{% extends 'polls/index.html' %}
+{% block head %}
+{% load static %}
+<meta charset="utf-8" />
+<!-- Website Design By: www.happyworm.com -->
+<title>Demo : jPlayer as an audio playlist player</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="/static/jPlayer-master/dist/skin/pink.flag/css/jplayer.pink.flag.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/jPlayer-master/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/add-on/jplayer.playlist.min.js"></script>
+
+
+
+
+{% endblock %}
+{% block content %}
+<h1 class="container" style="width: 1000px; color:white;background-color:green">FREETIFY </h1>
+
+{% for titles in title %}
+
+<input type="hidden" id="myVar" name="variable" value="{{titles.title}}">
+<input type="hidden" id="myVar1" name="variable" value="{{titles.mp3}}">
+<h2>{{titles.title}}</h2>
+{% endfor %}
+<div class="row" >
+    <h4 style="margin-top: 15px; margin-left: 15px;">Şarkı Yükle</h4>
+    <form method="post" action="./app3" style="margin-top: 15px; margin-left: 15px;">
+      {% csrf_token %}
+      Şarkı Linki: <input  type="text" name="musicLink" ><br>
+
+      <input type="submit" value="Submit" style="margin-top: 15px; ">
+    </form>
+    <div class="container">
+<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+<div id="jp_container_1" class="jp-audio" role="application" aria-label="media player" style="margin-top:100px;margin-left: 100px;width: 250px;">
+	<div class="jp-type-playlist">
+		<div class="jp-gui jp-interface"  >
+			<div class="jp-volume-controls" >
+				<button class="jp-mute" role="button" tabindex="0">mute</button>
+				<button class="jp-volume-max" role="button"  tabindex="0">max volume</button>
+				<div class="jp-volume-bar" >
+					<div class="jp-volume-bar-value" ></div>
+				</div>
+			</div>
+			<div class="jp-controls-holder">
+				<div class="jp-controls" >
+					<button class="jp-previous" role="button" tabindex="0">previous</button>
+					<button class="jp-play" role="button" tabindex="0">play</button>
+					<button class="jp-stop" role="button" tabindex="0">stop</button>
+					<button class="jp-next" role="button" tabindex="0">next</button>
+				</div>
+				<div class="jp-progress">
+					<div class="jp-seek-bar">
+						<div class="jp-play-bar"></div>
+					</div>
+				</div>
+				<div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+				<div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+				<div class="jp-toggles">
+					<button class="jp-repeat" role="button" tabindex="0">repeat</button>
+					<button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
+				</div>
+			</div>
+		</div>
+		<div class="jp-playlist">
+			<ul>
+				<li>&nbsp;</li>
+			</ul>
+		</div>
+		<div class="jp-no-solution">
+			<span>Update Required</span>
+			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+		</div>
+	</div>
+
+</div>
+</div>
+<!--
+<div class="panel panel-primary" id="result_panel" style="margin-left:auto; margin-right:0;">
+    <div class="panel-heading"><h3 class="panel-title">Songs List</h3></div>
+    <div class="panel-body">
+        <ul class="list-group">
+                {% for i in title %}
+                <bu class="list-group-item"><button id= "music"onclick="playSound(this.id)" >{{i.title}}</button></bu>
+                {% endfor %}
+        </ul>
+    </div>
+</div>
+-->
+</div>
+
+
+
+<script type="text/javascript" charset="utf-8">
+var xmlhttp = new XMLHttpRequest();
+var url = "json_demo.txt";
+
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var myArr = JSON.parse(this.responseText);
+        myFunction(myArr);
+    }
+};
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function myFunction(musicList) {
+$(document).ready(function(){
+	console.log(musicList)
+	var myPlaylist =new jPlayerPlaylist({
+		encoding:"utf-8",
+		jPlayer: "#jquery_jplayer_1",
+		cssSelectorAncestor: "#jp_container_1"
+	},
+
+		musicList
+
+	, {
+		swfPath: "../../dist/jplayer",
+		supplied: "mp3",
+		wmode: "fullscreen",
+		useStateClassSkin: true,
+		autoBlur: false,
+		smoothPlayBar: true,
+		keyEnabled: true
+	});
+
+});
+}
+</script>
+
+
+
+
+
+{% endblock %}
+

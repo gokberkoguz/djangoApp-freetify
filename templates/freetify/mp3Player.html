@@ -1,0 +1,916 @@
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<!DOCTYPE html><html class=''>
+<head><script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/emoreno911/pen/zNMOew?depth=everything&limit=all&order=popularity&page=86&q=material+&show_forks=false" />
+
+<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Roboto:100,400,500,700'><link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css'>
+<style class="cp-pen-styles">body {
+  font-family: 'Roboto', sans-serif;
+  color: #444;
+  background-color: #f3f3f3;
+  background-color: #e3e3e3;
+}
+
+.wrapper {
+  background-color: #f8f8f8;
+  position: relative;
+  display: flex;
+  height: 610px;
+  width: 365px;
+  margin: 10px auto;
+  box-shadow: 0px 2px 15px #ddc;
+  /*border-radius: 5px;*/
+}
+
+.list {
+  width: 100%;
+  height: 100%;
+}
+
+.list header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 15px 0 35px;
+  box-shadow: 0 1px 15px #e3e3e3;
+}
+
+.list header > * { display: inline-block; }
+
+.list header h3 {
+  min-width: 220px;
+  font-weight: 400;
+  font-size: 20px;
+  margin: 15px 20px 15px 40px;
+  flex-grow: 1;
+}
+
+.list header i {
+    font-size: 24px;
+}
+
+.list section {
+  height: calc(100% - 64px);
+  overflow: hidden;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  height: 84px;
+}
+
+.list-item > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.list-item .thumb {
+  width: 64px;
+  height: 64px;
+  margin: 10px;
+}
+
+.list-item img {
+  position: absolute;
+  left: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px #999;
+  cursor: pointer;
+  z-index: 1;
+  transition: all .4s ease;
+
+}
+.list-item img.open {
+    top: 0 !important;
+    /*top: -54px !important;*/
+    left: 0;
+    height: 365px;
+    width: 100%;
+    z-index: 10;
+    transition: all .4s ease-in-out;
+}
+
+/*************************************************/
+@keyframes expand-on {
+  from { transform: translateY(160px); opacity: 0 }
+  to { transform: translateY(0); opacity: 1 }
+}
+
+@keyframes expand-off {
+  from { transform: translateY(0); opacity: 1 }
+  to { transform: translateY(160px); opacity: 0 }
+}
+
+@keyframes fade-in {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+/*************************************************/
+
+.list-item span {
+  margin-bottom: 5px;
+}
+.list-item small {
+  color: #888;
+  font-size: 12px;
+}
+
+.list-item .title { flex-grow: 1; padding-left: 5px; min-width: 190px}
+.list-item .title > * { display: block; }
+
+.list-item .length { padding: 20px; }
+
+.detail {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  z-index: 10;
+}
+
+.detail.open { display: flex; }
+
+.detail i.close { opacity: 0; }
+.detail.open i.close { opacity: 1; animation: fade-in .6s ease; }
+
+.detail.open .info .title { animation: expand-on .5s ease }
+.detail.open .player { animation: expand-on .25s ease }
+
+.detail.lock .info .title,
+.detail.lock .player { animation: expand-off .3s ease }
+
+.info .title i,
+.player .track,
+.player .controls i { opacity: 0; }
+
+.info .title i:nth-child(1) { transform: translateX(40px); }
+.info .title i:nth-child(3) { transform: translateX(-40px); }
+
+.player .controls i:nth-child(1) { transform: translateX(80px); }
+.player .controls i:nth-child(2) { transform: translateX(40px); }
+.player .controls i:nth-child(4) { transform: translateX(-40px); }
+.player .controls i:nth-child(5) { transform: translateX(-80px); }
+
+.detail.ready .info .title > *,
+.detail.ready .player .track,
+.detail.ready .player .controls > * {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all .4s ease;
+}
+
+/*.detail .info img { width: 100%; }
+.detail .info img { opacity: 0 }
+.detail.lock .info img { opacity: 0 !important; }
+.detail.ready .info img { opacity: 1; animation: fade-in .4s ease }*/
+
+.detail .info .thumb > div { width: 100%; }
+.detail .info .thumb { opacity: 0 }
+.detail.lock .info .thumb { opacity: 0 !important; } /* this must be important */
+.detail.ready .info .thumb { opacity: 1; animation: fade-in .4s ease }
+.detail.ready .info .thumb { background-color: #444; }
+
+/*#4f6 #82d*/
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: #fff;
+  flex-grow: 1;
+}
+
+.player .controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.player .controls i { font-size: 26px; color: #666; }
+
+.player .controls .zmdi-fast-rewind,
+.player .controls .zmdi-fast-forward { cursor: pointer; }
+
+.player .track { padding: 0 10px; }
+
+.player .track .counter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .5;
+  color: #666;
+  margin-top: 5px;
+}
+
+.player .track .progress {
+  width: 100%;
+    height: 3px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+    background-color: rgba(0,0,0,0.3);
+    cursor: pointer;
+  margin-top: -4px;
+}
+
+.player .track .bar {
+  position: absolute;
+  background-color: #666;
+  height: 100%;
+  width: 0;
+  border-radius: 10px;
+  transition: all .4s ease;
+}
+
+.player .track .bar:before{
+  content: "";
+  display: block;
+  position: absolute;
+  /*right: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: -3px;*/
+
+  right: -3px;
+    width: 4px;
+    height: 8px;
+    top: -2px;
+}
+
+.info .slide {
+  display: flex;
+  flex-direction: column;
+}
+
+.info .thumb { flex-grow: 1; }
+.info .title {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: .02;
+  background: #fff;
+}
+
+.info .title i { font-size: 22px; color: #888; }
+.info .title h3 > * { display: block; }
+.info .title h3 { text-align: center; font-weight: 500; }
+.info .title h3 span { margin-bottom: 5px; }
+.info .title h3 small { font-size: 14px; font-weight: 400; }
+
+.detail i.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  color: #fff;
+  font-size: 24px;
+  text-shadow: 1px 1px 5px #444;
+  transition: text-shadow .4s ease;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.detail i.close:hover {
+  text-shadow: 1px 1px 2px #888;
+  transition: text-shadow .4s ease;
+}
+
+.info {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider {
+  position: relative;
+  /*width: 300%;*/
+  /*height: 100%;*/
+  -webkit-transition: -webkit-transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1);
+  transition: -webkit-transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1);
+  transition: transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1);
+  transition: transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1), -webkit-transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1);
+  will-change: transform;
+}
+
+.slider .slide { display: none; float: left; }
+.slider .slide:nth-child(1) { display: flex !important; }
+
+/** Pure Css Slider **/
+.slider { width: calc(365px * 6); }
+.slider .slide {
+  display: flex;
+  width: 365px;
+}
+
+.slider .slide .thumb {
+  height: 365px;
+  position: relative;
+  /*background-color: rgba(0,0,0,.4);*/
+  transition: transform 0.6s cubic-bezier(0.51, 0.92, 0.24, 1);
+}
+
+.slider .slide .thumb > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(50% + 1px);
+  background-size: cover;
+  transition: transform 0.4s cubic-bezier(0.51, 0.92, 0.24, 1);
+}
+
+.slider .slide .thumb > div:first-child { background-position: top left }
+.slider .slide .thumb > div:last-child { background-position: bottom left; top: 50%; }
+
+.slide .thumb.skewLeft > div { transition: all 0.6s cubic-bezier(0.51, 0.92, 0.24, 1); }
+.slide .thumb.skewLeft > div:first-child { transform: skew(-3deg) translateX(-8px);}
+.slide .thumb.skewLeft > div:last-child { transform: skew(3deg) translateX(-8px);}
+
+.slide .thumb.skewRight > div { transition: all 0.6s cubic-bezier(0.51, 0.92, 0.24, 1); }
+.slide .thumb.skewRight > div:first-child { transform: skew(3deg) translateX(8px);}
+.slide .thumb.skewRight > div:last-child { transform: skew(-3deg) translateX(8px);}
+
+.wrapper[data-pos="0"] .slider {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+.wrapper[data-pos="1"] .slider {
+  -webkit-transform: translateX(-365px);
+          transform: translateX(-365px);
+}
+.wrapper[data-pos="2"] .slider {
+  -webkit-transform: translateX(-730px);
+          transform: translateX(-730px);
+}
+.wrapper[data-pos="3"] .slider {
+  -webkit-transform: translateX(-1095px);
+          transform: translateX(-1095px);
+}
+.wrapper[data-pos="4"] .slider {
+  -webkit-transform: translateX(-1460px);
+          transform: translateX(-1460px);
+}
+.wrapper[data-pos="5"] .slider {
+  -webkit-transform: translateX(-1825px);
+          transform: translateX(-1825px);
+}
+
+.wrapper[data-pos="0"] .player-indicator,
+.wrapper[data-pos="0"] .player .track .bar,
+.wrapper[data-pos="0"] .player .track .bar:before,
+.wrapper[data-pos="0"] .player .playbtn {
+  background-color: rgba(0, 150, 136, 1);
+  transition: all .4s ease-in-out;
+}
+.wrapper[data-pos="1"] .player-indicator,
+.wrapper[data-pos="1"] .player .track .bar,
+.wrapper[data-pos="1"] .player .track .bar:before,
+.wrapper[data-pos="1"] .player .playbtn {
+  background-color: rgba(63, 81, 181, 1);
+  transition: all .4s ease-in-out;
+}
+.wrapper[data-pos="2"] .player-indicator,
+.wrapper[data-pos="2"] .player .track .bar,
+.wrapper[data-pos="2"] .player .track .bar:before,
+.wrapper[data-pos="2"] .player .playbtn {
+  background-color: rgba(96, 125, 139, 1);
+  transition: all .4s ease-in-out;
+}
+.wrapper[data-pos="3"] .player-indicator,
+.wrapper[data-pos="3"] .player .track .bar,
+.wrapper[data-pos="3"] .player .track .bar:before,
+.wrapper[data-pos="3"] .player .playbtn {
+  background-color: rgba(90, 71, 46, 1);
+  transition: all .4s ease-in-out;
+}
+.wrapper[data-pos="4"] .player-indicator,
+.wrapper[data-pos="4"] .player .track .bar,
+.wrapper[data-pos="4"] .player .track .bar:before,
+.wrapper[data-pos="4"] .player .playbtn {
+  background-color: rgba(238, 119, 51, 1);
+  transition: all .4s ease-in-out;
+}
+.wrapper[data-pos="5"] .player-indicator,
+.wrapper[data-pos="5"] .player .track .bar,
+.wrapper[data-pos="5"] .player .track .bar:before,
+.wrapper[data-pos="5"] .player .playbtn {
+  background-color: rgba(244, 67, 54, 1);
+  transition: all .4s ease-in-out;
+}
+
+.wrapper[data-pos="0"] .player .track .progress {
+  background-color: rgba(0, 150, 136, .3);
+}
+.wrapper[data-pos="1"] .player .track .progress {
+  background-color: rgba(63, 81, 181, .3);
+}
+.wrapper[data-pos="2"] .player .track .progress {
+  /*background-color: rgba(136, 34, 221, .3);*/
+  background-color: rgba(96, 125, 139, .3);
+}
+.wrapper[data-pos="3"] .player .track .progress {
+  background-color: rgba(90, 71, 46, .3);
+}
+.wrapper[data-pos="4"] .player .track .progress {
+  background-color: rgba(238, 119, 51, .3);
+}
+.wrapper[data-pos="5"] .player .track .progress {
+  background-color: rgba(244, 67, 54, .3);
+}
+
+.playbtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  background: #bbb;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.playbtn span {
+  display: block;
+  margin-left: 5px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 20px;
+  border-color: transparent transparent transparent #fff;
+  transition: all .5s ease;
+}
+
+.playbtn.pause span{
+  margin-left: -10px;
+  width: 7px;
+  height:20px;
+  border-width: 0;
+  background-color: #fff;
+  transition: all .5s ease;
+}
+
+.playbtn span:before {
+  display: block;
+  content: "";
+  width: 0;
+  height: 0;
+  position: relative;
+  left: 12px;
+  background-color: #fff;
+}
+.playbtn.pause span:before {
+  width: 7px;
+  height: 20px;
+}
+
+
+.analyser {
+  width: 100%;
+  height: 24px;
+}
+
+.player-indicator {
+  display: none;
+  position: absolute;
+  right: 15px;
+  top: 75px;
+
+  cursor: pointer;
+  transition: top .4s ease;
+}
+
+.player-indicator .playb {
+  padding: 9px 6px 7px 10px;
+  color: white;
+}
+
+.player-indicator .bars {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 36px;
+  height: 32px;
+  margin: 2px 0;
+}
+
+.player-indicator .bars div {
+  display: flex;
+  align-items: flex-end;
+  width: 5px;
+  margin-left: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 100%;
+}
+
+.player-indicator .bars div:before {
+  content: "";
+  display: block;
+  width: 100%;
+  background-color: rgba(137, 255, 0, 0.5);
+  /*background: linear-gradient(to bottom, #2196F3 0%, #89ff00 70%, #FFEB3B 100%);*/
+  animation: animate_height 1s ease-in-out infinite;
+}
+
+.player-indicator .bars div:nth-child(2):before { animation-delay: .5s; animation-timing-function: ease-out; }
+.player-indicator .bars div:nth-child(3):before { animation-delay: .2s; animation-timing-function: ease-in; }
+.player-indicator .bars div:nth-child(4):before { animation-delay: .4s; }
+.player-indicator .bars div:nth-child(5):before { animation-delay: .1s; }
+
+.wrapper.playing .player-indicator,
+.wrapper.paused .player-indicator {
+  display: flex;
+}
+
+.wrapper.paused .player-indicator .bars div:before {
+  height: 0;
+  animation: none;
+}
+
+.wrapper.paused .player-indicator .playb:before {
+  content: "►";
+  display: block;
+}
+
+.wrapper.playing .player-indicator .playb:before {
+  content: "❚❚";
+  display: block;
+  position: relative;
+  left: -1px;
+}
+
+@keyframes animate_height {
+  0% { height: 5% }
+  50% { height: 95% }
+  100% { height: 20% }
+}
+
+.wrapper[data-pos="0"] .player-indicator { top: 78px; }
+.wrapper[data-pos="1"] .player-indicator { top: calc(76px + 1 * 91px); }
+.wrapper[data-pos="2"] .player-indicator { top: calc(75px + 2 * 91px); }
+.wrapper[data-pos="3"] .player-indicator { top: calc(75px + 3 * 90px); }
+.wrapper[data-pos="4"] .player-indicator { top: calc(74px + 4 * 90px); }
+.wrapper[data-pos="5"] .player-indicator { top: calc(73px + 5 * 90px); }</style></head><body>
+<div class="wrapper" data-pos="0">
+
+      <div class="list">
+        <div class="player-indicator">
+          <div class="playb"></div>
+          <div class="bars">
+            <div></div><div></div><div></div><div></div><div></div>
+          </div>
+        </div>
+        <header>
+          <div><i class="zmdi zmdi-arrow-left"></i></div>
+          <h3>Favourites</h3>
+          <div><i class="zmdi zmdi-more-vert"></i></div>
+        </header>
+        <section></section>
+      </div>
+
+      <div class="detail">
+        <div class="info">
+          <i class="zmdi zmdi-close close"></i>
+          <div class="slider">
+            <!-- slides here -->
+          </div>
+        </div>
+        <div class="player">
+          <div class="controls">
+            <i class="zmdi zmdi-shuffle"></i>
+            <i class="zmdi zmdi-fast-rewind"></i>
+            <div class="playbtn"><span></span></div>
+            <i class="zmdi zmdi-fast-forward"></i>
+            <i class="zmdi zmdi-replay"></i>
+          </div>
+          <div class="track">
+            <audio class="audio" preload="true"></audio>
+            <canvas class="analyser"></canvas>
+            <div class="progress">
+              <div class="bar"></div>
+            </div>
+            <div class="counter"><span class="begin">0:00</span><span class="end">0:00</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script><script src='https://cdn.jsdelivr.net/domtastic/0.12/domtastic.min.js'></script><script src='https://hammerjs.github.io/dist/hammer.min.js'></script>
+<script>var Player = function(containerSelector, opts) {
+	this.$container = document.querySelector(containerSelector);
+	this.$audioEl = this.$container.querySelector('.audio');
+	this.$timeline = this.$container.querySelector('.progress');
+	this.$playbtn = this.$container.querySelector('.playbtn');
+
+	this.duration = 0;
+	this.timelineWidth = 0;
+	this.currentTrack = 0;
+	this.playerState = 'stop';
+	this.$audioEl.crossOrigin = "anonymous";
+  this.$audioEl.volume = 0.15;
+	this.tracks = opts.tracks;
+
+	this.$audioEl.addEventListener("timeupdate", this.timeUpdate.bind(this), false);
+	this.$playbtn.addEventListener("click", this.play.bind(this), false);
+
+	this.$audioEl.addEventListener("canplaythrough", () => { this.duration = this.$audioEl.duration; }, false);
+	this.$timeline.addEventListener("click", (e) => {
+		var skipTo = e.offsetX / this.timelineWidth;
+		this.$audioEl.currentTime = this.duration * skipTo;
+	});
+
+	this.analyserInitialized = false;
+
+}
+
+Player.prototype.play = function() {
+	this.timelineWidth = this.$timeline.offsetWidth;
+
+	if (this.$audioEl.paused) {
+		this.$audioEl.play();
+		// remove play, add pause
+		this.$playbtn.className = "playbtn pause";
+		this.setPlayerState('play');
+	} else { // pause audio
+		this.$audioEl.pause();
+		// remove pause, add play
+		this.$playbtn.className = "playbtn";
+		this.setPlayerState('pause');
+	}
+
+	setTimeout(()=>{
+		this.$container.querySelector('.end').innerText = this.formatTime(this.$audioEl.duration);
+		this.duration = this.$audioEl.duration;
+	}, 1000);
+
+	// check for the analyser
+	if(!this.analyserInitialized) {
+		this.setupAnalyser();
+		this.analyserInitialized = true;
+	}
+
+	// color references for analyser bars
+	this.barBG = this.getBgColor(this.$timeline);
+	this.barFG = this.getBgColor(this.$timeline.querySelector('.bar'));
+}
+
+Player.prototype.timeUpdate = function() {
+	var playPercent =
+		(this.$audioEl.duration == 'Infinity')? 100
+		: this.$audioEl.currentTime * 100 / this.$audioEl.duration;
+
+	this.setTimeline(playPercent, this.$audioEl.currentTime);
+
+	if (playPercent > 99.9) {
+		this.$playbtn.className = "playbtn";
+		this.setPlayerState('stop');
+	}
+}
+
+Player.prototype.changeTrack = function(index, autoplay) {
+	//Stopping the download of media
+	this.$audioEl.removeAttribute("src");
+	this.$audioEl.load();
+
+	this.currentTrack = index;
+	this.$audioEl.setAttribute("src", this.tracks[index].src);
+	this.$audioEl.load();
+
+	setTimeout(()=>{
+		this.setTimeline(0, 0, this.$audioEl.duration);
+		if(autoplay){
+			this.play();
+		}
+	}, 400);
+}
+
+Player.prototype.setTimeline = function(playPercent, elapsed, duration) {
+	var _playPercent = (playPercent > 99)? playPercent - 1 : playPercent,
+		_elapsed = elapsed || this.$audioEl.currentTime;
+
+	this.$timeline.querySelector('.bar').style.width = _playPercent + "%";
+	this.$container.querySelector('.begin').innerText = this.formatTime(_elapsed);
+
+	if(duration)
+		this.$container.querySelector('.end').innerText = this.formatTime(duration);
+
+}
+
+Player.prototype.setPlayerState = function(state) {
+	var evt = new CustomEvent('playerStateChanged', {'detail': state});
+	this.playerState = state;
+	this.$container.dispatchEvent(evt);
+}
+
+Player.prototype.formatTime = function(seconds) {
+	minutes = Math.floor(seconds / 60);
+    minutes = (minutes >= 10) ? minutes : "" + minutes;
+    seconds = Math.floor(seconds % 60);
+    seconds = (seconds >= 10) ? seconds : "0" + seconds;
+    return minutes + ":" + seconds;
+}
+
+// http://www.developphp.com/video/JavaScript/Analyser-Bars-Animation-HTML-Audio-API-Tutorial
+Player.prototype.setupAnalyser = function() {
+	this.$canvas = this.$container.querySelector('.analyser');
+	this.ctx = this.$canvas.getContext('2d');
+	this.audioContext = new AudioContext() || new webkitAudioContext();
+	this.analyser = this.audioContext.createAnalyser();
+
+	var source = this.audioContext.createMediaElementSource(this.$audioEl);
+	source.connect(this.analyser);
+	this.analyser.connect(this.audioContext.destination);
+	this.frameLooper();
+}
+
+Player.prototype.frameLooper = function() {
+	window.requestAnimationFrame(this.frameLooper.bind(this));
+	var fbc_array = new Uint8Array(this.analyser.frequencyBinCount);
+	var bars = 75;
+	var currentPercent = parseInt(this.$audioEl.currentTime*bars/this.$audioEl.duration);
+
+	this.analyser.getByteFrequencyData(fbc_array);
+	this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height); // Clear the canvas
+	this.ctx.fillStyle = this.barFG; // Color of the bars
+
+	for (var i = 0; i < bars; i++) {
+		if(i > currentPercent)
+			this.ctx.fillStyle = this.barBG;
+
+		bar_x = i * 4;
+		bar_width = 3.5;
+		bar_height = -(fbc_array[i] / 2);
+		this.ctx.fillRect(bar_x, this.$canvas.height, bar_width, bar_height);
+	}
+}
+
+// https://permadi.com/tutorial/cssGettingBackgroundColor/index.html
+Player.prototype.getBgColor = function(element)
+{
+  if (element.currentStyle)
+    return element.currentStyle.backgroundColor;
+  if (window.getComputedStyle)
+  {
+    var elementStyle=window.getComputedStyle(element,"");
+    if (elementStyle)
+      return elementStyle.getPropertyValue("background-color");
+  }
+  // Return 0 if both methods failed.
+  return 0;
+}
+</script>
+<script >"use strict";
+
+/** https://github.com/emoreno911/UI-to-Code/tree/master/material_music **/
+/*** In the player view Swipe left or right to change the current song ***/
+var listItems = [],
+    detailItems = [],
+    playlist = [{ "time": "178", "title": "Snowflake - Living Nightmare", "img": "https://dl.dropbox.com/s/wacl6yr2b32sqds/snowflake.jpg", "src": "https://dl.dropbox.com/s/4ef8ana3rsm7sdu/snowflake.mp3" }, { "time": "124", "title": "Bensound - Dubstep", "img": "https://dl.dropbox.com/s/7a1psxm2i4m644k/dubstep2.jpg", "src": "https://dl.dropbox.com/s/ebsjr0uq9zfg9x0/dubstep.mp3" }, { "time": "78", "title": "Secret Of Life - 42", "img": "https://dl.dropbox.com/s/z1j07kiqo9r2mj9/track3.jpeg", "src": "https://dl.dropbox.com/s/goyhvi2np0mov5n/track3.mp3" }, { "time": "216", "title": "Bensound - Retrosoul", "img": "https://dl.dropbox.com/s/e2b9l3cbjy4wthw/retrosoul.jpg", "src": "https://dl.dropbox.com/s/lfc7z6kz2q1k2vo/retrosoul.mp3" }, { "time": "175", "title": "Snowflake - Holiday Funky Blues", "img": "https://dl.dropbox.com/s/myu3b9qtf74sz3i/snowflake2.jpg", "src": "https://dl.dropbox.com/s/kwy27cjasc6yodw/snowflake3.mp3" }, { "time": "105", "title": "Bensound - Happy Rock", "img": "https://dl.dropbox.com/s/fz8452movdjnfe8/happyrock.jpg", "src": "https://dl.dropbox.com/s/03abwi15hveg4yj/happyrock.mp3" }];
+
+playlist.forEach(function (el, i) {
+  var _el$title$split = el.title.split('-');
+
+  var artist = _el$title$split[0];
+  var title = _el$title$split[1];
+
+  var top = 66 * (i + 1) + i * 22;
+  var z = i + 1;
+
+  var itemList = "<div class=\"list-item\" data-index=\"" + i + "\">\n        <div class=\"thumb\">\n        \t<img src=\"" + el.img + "\" alt=\"song_title\" style=\"top: " + top + "px\">\n        </div>\n        <div class=\"title\">\n          <span>" + title + "</span>\n          <small>" + artist + "</small>\n        </div>\n        <div class=\"length\"><small>" + (formatTime(el.time) || "0:00") + "</small></div>\n      </div>";
+
+  var itemDetail = "<div class=\"slide\">\n      <div class=\"thumb\">\n        <div style=\"background-image:url(" + el.img + ")\"></div>\n        <div style=\"background-image:url(" + el.img + ")\"></div>\n      </div>\n      <div class=\"title\">\n        <i class=\"zmdi zmdi-minus-circle-outline\"></i>\n        <h3><span>" + title + "</span><small>" + artist + "</small></h3>\n        <i class=\"zmdi zmdi-favorite-outline\"></i>\n      </div>\n    </div>";
+
+  listItems.push(itemList);
+  detailItems.push(itemDetail);
+});
+
+document.querySelector('.list section').innerHTML = listItems.join('');
+document.querySelector('.detail .slider').innerHTML = detailItems.join('');
+
+var positionElement = document.querySelector('.wrapper'),
+    sliderElement = document.querySelector('.slider');
+
+var $listItemImg = $('.list-item img'),
+    $detail = $('.detail');
+
+var _player = new Player('.player', { tracks: playlist });
+_player.$container.addEventListener('playerStateChanged', function (evt) {
+  //console.log('player changed to ' + evt.detail);
+  var $wrapper = $('.wrapper');
+
+  if (evt.detail == 'play') $wrapper.removeClass('paused').addClass('playing');else if (evt.detail == 'pause') $wrapper.removeClass('playing').addClass('paused');else $wrapper.removeClass('paused').removeClass('playing');
+}, false);
+
+$('.player-indicator .playb').on('click', function (evt) {
+  _player.play();
+});
+
+$('.list-item').on('click', function (evt) {
+  // select the current detail item
+  var $this = $(this),
+      index = this.getAttribute('data-index');
+
+  positionElement.setAttribute('data-pos', index);
+  currentSlide = parseInt(index);
+
+  $this.find('img').addClass('open');
+  $detail.addClass('open');
+  setTimeout(function () {
+    $detail.addClass('ready');
+
+    if (_player.currentTrack != currentSlide) _player.changeTrack(currentSlide, true);
+  }, 300);
+});
+
+$('.detail .close').on('click', function (evt) {
+  $listItemImg.removeClass('open');
+  $detail.addClass('lock');
+
+  setTimeout(function () {
+    $detail.removeClass('ready lock open');
+  }, 250);
+});
+
+$('.controls .zmdi-fast-rewind').on('click', prev);
+$('.controls .zmdi-fast-forward').on('click', next);
+
+var slideCount = 6,
+    step = 5,
+    maxSpan = 100,
+    currentSpan = 0,
+    currentSlide = 0;
+
+var hammertime = new Hammer(sliderElement);
+hammertime.on("panleft panright panstart panend", function (evt) {
+
+  if (evt.type == 'panleft') {
+    currentSpan += step;
+
+    if (currentSpan > maxSpan) next();
+  }
+
+  if (evt.type == 'panright') {
+    currentSpan -= step;
+
+    if (currentSpan < -(maxSpan + 20)) prev();
+  }
+
+  // pull the borders
+  if (evt.type == 'panstart' && evt.additionalEvent == 'panleft') {
+    var s = currentSlide + 1;
+    $('.slide:nth-child(' + s + ') .thumb').addClass('skewLeft');
+  }
+
+  if (evt.type == 'panstart' && evt.additionalEvent == 'panright') {
+    var s = currentSlide + 1;
+    $('.slide:nth-child(' + s + ') .thumb').addClass('skewRight');
+  }
+
+  if (evt.type == 'panend') {
+    $('.thumb').removeClass('skewLeft skewRight');
+    currentSpan = 0;
+  }
+});
+
+function next() {
+  var slide = parseInt(positionElement.getAttribute('data-pos')),
+      newSlide = slide + 1 > slideCount - 1 ? slide : slide + 1;
+  positionElement.setAttribute('data-pos', newSlide);
+  currentSlide = newSlide;
+  currentSpan = 0;
+  _player.changeTrack(currentSlide, true);
+  // sync the selected list item with the current detail item
+  $listItemImg.removeClass('open').eq(currentSlide).addClass('open');
+}
+
+function prev() {
+  var slide = parseInt(positionElement.getAttribute('data-pos')),
+      newSlide = slide - 1 < 0 ? slide : slide - 1;
+  positionElement.setAttribute('data-pos', newSlide);
+  currentSlide = newSlide;
+  currentSpan = 0;
+  _player.changeTrack(currentSlide, true);
+  // sync the selected list item with the current detail item
+  $listItemImg.removeClass('open').eq(currentSlide).addClass('open');
+}
+
+function formatTime(seconds) {
+  var minutes = Math.floor(seconds / 60);
+  minutes = minutes >= 10 ? minutes : "" + minutes;
+  seconds = Math.floor(seconds % 60);
+  seconds = seconds >= 10 ? seconds : "0" + seconds;
+  return minutes + ":" + seconds;
+}
+//# sourceURL=pen.js
+</script>
+</body></html>

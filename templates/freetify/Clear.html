@@ -1,0 +1,218 @@
+{% extends 'polls/index.html' %}
+{% block head %}
+{% load static %}
+
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-3" style="background-color: black">
+        <h2 style="color:white">Music List- Freetify</h2>
+
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Songs.." title="Type in a name">
+
+        <ul id="myUL" style="background-color: black">
+            {% for mp3 in mp3List %}
+            <li><a style="background-color: black;color: white" onclick="mp3Click(this.id)" id="{{mp3.mp3}}"
+                   href="javascript:;" data-title="{{mp3.title}}" data-mp3="{{mp3.mp3}}" data-poster="{{mp3.poster}}">{{mp3.title}}</a>
+            </li>
+            {% endfor %}
+            <h2 id="hiddenMp3" name="halo" mp3="/static/music/8DyziWtkfBw.m4a"></h2>
+
+        </ul>
+    </div>
+    <div class="col-sm-7" style="background-color: black">
+        <div id="jquery_jplayer_1" class="jp-jplayer" style="margin-top: 30px"></div>
+        <p style="margin-top: 140px">
+            <button id="play"></button>
+            <button id="pause"></button>
+            <button id="stop"></button>
+            <button id="mute"></button>
+            <button id="unmute"></button>
+            <span style="color: white" id="title"></span> |
+            <span style="color: white" id="currentTime"></span> / <span style="color: white" id="duration"></span>
+            <button id="addPlaylist">Test </button>
+        </p>
+
+    </div>
+    <div class="col-sm-2" style="background-color: black">
+        <h4 style="color:white; margin-top: 15px; margin-left: 15px;">Şarkı Yükle</h4>
+        <form method="post" action="./app3" style=" color: wheat;margin-top: 15px; margin-left: 15px;">
+            {% csrf_token %}
+            Şarkı Linki: <input type="text" name="musicLink"><br>
+
+            <input type="submit" value="Submit" style="margin-top: 15px; ">
+        </form>
+    </div>
+</div>
+
+<script>
+    function mp3Click(click_id) {
+        console.log("ses")
+        var music = document.getElementById(click_id);
+        console.log(music.dataset.mp3)
+        $("#jquery_jplayer_1").jPlayer("setMedia", {
+            mp3: music.dataset.mp3,
+            title: music.dataset.title,
+            poster: music.dataset.poster,
+        });
+        $("#jquery_jplayer_1").jPlayer("play");
+
+    };
+</script>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    #myInput {
+        background-image: url('/css/searchicon.png');
+        background-position: 10px 12px;
+        background-repeat: no-repeat;
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+    #myUL {
+        width: 100%;
+        height: 500px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container::-webkit-scrollbar {
+    / / Safari and Chrome
+    }
+
+    #myUL li a {
+
+        border: 1px solid #ddd;
+        border-color: black;
+        margin-top: -1px; /* Prevent double borders */
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+
+    }
+
+    #myUL li a:hover:not(.header) {
+        background-color: #eee;
+    }
+</style>
+<script>
+
+</script>
+<script>
+    function myFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log(document.getElementById("hiddenMp3").attributes.name.value)
+        $("#jquery_jplayer_1").jPlayer({
+            ready: function () {
+                $(this).jPlayer("setMedia", {
+                    title: document.getElementById("hiddenMp3").attributes.name.value,
+                    mp3: document.getElementById("hiddenMp3").attributes.mp3.value,
+
+                });
+            },
+            swfPath: "/js",
+            supplied: "mp3",
+            cssSelectorAncestor: "",
+            cssSelector: {
+                title: "#title",
+                play: "#play",
+                pause: "#pause",
+                stop: "#stop",
+                mute: "#mute",
+                unmute: "#unmute",
+                currentTime: "#currentTime",
+                duration: "#duration"
+            },
+            size: {
+                width: "800px",
+                height: "400px",
+
+            }
+        });
+    });
+</script>
+<script type="text/javascript" src="/static/jPlayer-master/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/jplayer/jquery.jplayer.min.js"></script>
+<script type="text/javascript" src="/static/jPlayer-master/dist/add-on/jplayer.playlist.min.js"></script>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    #play {
+        background-image: url('/static/images/play.svg');
+        background-size: 45px 46px;
+        height: 50px;
+        width: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    #stop {
+        background-image: url('/static/images/stop.png');
+        background-size: 45px 46px;
+        height: 50px;
+        width: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    #pause {
+        background-image: url('/static/images/pause.svg');
+        background-size: 45px 46px;
+        height: 50px;
+        width: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    #mute {
+        background-image: url('/static/images/mute.svg');
+        background-size: 45px 46px;
+        height: 50px;
+        width: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    #unmute {
+        background-image: url('/static/images/unmute.png');
+        background-size: 45px 46px;
+        height: 50px;
+        width: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+</style>
+{% endblock %}
